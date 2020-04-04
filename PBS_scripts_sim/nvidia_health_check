@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "{\"comment\": \"simulation\" , \"health\": \"Pass\"}"

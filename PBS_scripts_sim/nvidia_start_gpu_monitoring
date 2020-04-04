@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# test for undeclared ENV value
+echo $GPU_GROUP_ID_START_VALUE
+
+# increase the value

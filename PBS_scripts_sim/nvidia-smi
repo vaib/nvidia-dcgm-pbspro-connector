@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat /opt/pbs-dcgm/PBS_scripts_sim/sim_data/nvidia-smi-data
