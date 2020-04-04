@@ -65,6 +65,24 @@ qmgr -c "c r GPU_memoryUtilization_minValue type=string"
 qmgr -c "c r GPU_memoryUtilization_average type=string"
 qmgr -c "c r GPU_duration type=string"
 
+qmgr -c "c r GPU_memoryClock_average_mean type=string"
+qmgr -c "c r GPU_smClock_minValue_mean type=string"
+qmgr -c "c r GPU_memoryUtilization_maxValue_mean type=string"
+qmgr -c "c r GPU_smClock_maxValue_mean type=string"
+qmgr -c "c r GPU_smUtilization_average_mean type=string"
+qmgr -c "c r GPU_maxGpuMemoryUsed_mean type=string"
+qmgr -c "c r GPU_smUtilization_maxValue_mean type=string"
+qmgr -c "c r GPU_smClock_average_mean type=string"
+qmgr -c "c r GPU_startTime_mean type=string"
+qmgr -c "c r GPU_smUtilization_minValue_mean type=string"
+qmgr -c "c r GPU_endTime_mean type=string"
+qmgr -c "c r GPU_energyConsumed_mean type=string"
+qmgr -c "c r GPU_memoryClock_minValue_mean type=string"
+qmgr -c "c r GPU_memoryClock_maxValue_mean type=string"
+qmgr -c "c r GPU_memoryUtilization_minValue_mean type=string"
+qmgr -c "c r GPU_memoryUtilization_average_mean type=string"
+qmgr -c "c r GPU_duration_mean type=string"
+
 qmgr -c "c r GPU_memoryClock_average_per_node type=string"
 qmgr -c "c r GPU_smClock_minValue_per_node type=string"
 qmgr -c "c r GPU_memoryUtilization_maxValue_per_node type=string"
@@ -892,7 +910,11 @@ class ngpus(resource):
                         
                         resource_node_totals[res][node] = res_total
                     
+                    # Dictionary of totals for all res on all nodes is ready
+                    #pbs.logmsg(pbs.EVENT_DEBUG, "resource_node_totals:%s" % (resource_node_totals))
+
                     # Build resource name
+                    # <res>_(min/max/avg)_per_node
                     j.resources_used[self.resource_config['resources'][base_resource[res]['base_resource']]['PBS_resource']+base_resource[res]['extention']+'_per_node'] = str('+'.join(node_resources))
             
             
@@ -919,6 +941,35 @@ class ngpus(resource):
                     if self.resource_config['resources'][base_resource[res]['base_resource']]['unit'] in ['B','secs'] and had_valid_resource:
                         val = round_to_best_unit(val)
                     j.resources_used[self.resource_config['resources'][base_resource[res]['base_resource']]['PBS_resource']+base_resource[res]['extention']] = str(val)
+
+
+            # Set mean resources
+            for res in resource_vals.keys():
+                if self.resource_config['resources'][base_resource[res]['base_resource']]['average_usage'] and self.resource_config['resources'][base_resource[res]['base_resource']]['aggregate_usage'] and self.resource_config['resources'][base_resource[res]['base_resource']]['report_usage']:
+                    res_total = 0
+                    res_avg   = 0
+                    had_valid_resource = False
+                    for node in node_names:
+                        if resource_node_totals[res][node] != self.missing_value_string:
+                            had_valid_resource = True
+                            if res != 'duration':
+                                res_total += resource_node_totals[res][node]
+                            else:
+                                if resource_node_totals[res][node] > res_total:
+                                    res_total = resource_node_totals[res][node]
+
+                    if not had_valid_resource:
+                        res_avg = self.missing_value_string
+                    else:
+                        res_avg = res_total / len(node_names)
+
+                    # Build resource name
+                    # Add unit to resource value
+                    val = '%s%s' % (str(res_avg), self.resource_config['resources'][base_resource[res]['base_resource']]['unit'])
+                    if self.resource_config['resources'][base_resource[res]['base_resource']]['unit'] in ['B','secs'] and had_valid_resource:
+                        val = round_to_best_unit(val)
+                    j.resources_used[self.resource_config['resources'][base_resource[res]['base_resource']]['PBS_resource']+base_resource[res]['extention']+'_mean'] = str(val)
+
 
 
     def get_defined_value(self, value):

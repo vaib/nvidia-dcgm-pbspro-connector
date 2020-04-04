@@ -147,6 +147,40 @@ The steps below describe the installation of the package.
     
      qmgr -c "c r GPU_duration type=string"
     
+     qmgr -c "c r GPU_memoryClock_average_mean type=string"
+
+     qmgr -c "c r GPU_smClock_minValue_mean type=string"
+
+     qmgr -c "c r GPU_memoryUtilization_maxValue_mean type=string"
+
+     qmgr -c "c r GPU_smClock_maxValue_mean type=string"
+
+     qmgr -c "c r GPU_smUtilization_average_mean type=string"
+
+     qmgr -c "c r GPU_maxGpuMemoryUsed_mean type=string"
+
+     qmgr -c "c r GPU_smUtilization_maxValue_mean type=string"
+
+     qmgr -c "c r GPU_smClock_average_mean type=string"
+
+     qmgr -c "c r GPU_startTime_mean type=string"
+
+     qmgr -c "c r GPU_smUtilization_minValue_mean type=string"
+
+     qmgr -c "c r GPU_endTime_mean type=string"
+
+     qmgr -c "c r GPU_energyConsumed_mean type=string"
+
+     qmgr -c "c r GPU_memoryClock_minValue_mean type=string"
+
+     qmgr -c "c r GPU_memoryClock_maxValue_mean type=string"
+
+     qmgr -c "c r GPU_memoryUtilization_minValue_mean type=string"
+
+     qmgr -c "c r GPU_memoryUtilization_average_mean type=string"
+
+     qmgr -c "c r GPU_duration_mean type=string"
+
      qmgr -c "c r GPU_memoryClock_average_per_node type=string"
     
      qmgr -c "c r GPU_smClock_minValue_per_node type=string"
